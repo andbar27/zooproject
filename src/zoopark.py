@@ -32,7 +32,7 @@ class Fence:
 
     def _addAnimal(self, animal: Animal):
         if self.habitat == animal.preferred_habitat and animal.fence == None:
-            animalArea = animal.height * animal.width
+            animalArea = round(animal.height * animal.width, 3)
             if self.area >= animalArea:
                 self.area -= animalArea
                 self.animals.append(animal)
@@ -65,7 +65,7 @@ class ZooKeeper:
         animalArea = animal.height * animal.width
         if animal.preferred_habitat == fence.habitat and animal not in fence.animals:
             if animalArea <= fence.area:
-                fence.area -= animalArea
+                fence.area = round(fence.area - animalArea, 3)
                 fence.animals.append(animal)
                 if animal.fence:    #if the animal is already in other fence, 
                                     #add animal in this fence and remove from the previous
@@ -75,16 +75,16 @@ class ZooKeeper:
     def remove_animal(self, animal: Animal, fence: Fence):
         if animal in fence.animals:
             fence.animals.remove(animal)
-            animalArea = animal.height * animal.width
+            animalArea = round(animal.height * animal.width, 3)
             fence.area += animalArea
             animal.fence = None
 
     def feed(self, animal: Animal):
-        tempHeight = animal.height + (animal.height / 100 * 2)
-        tempWidth = animal.width + (animal.width / 100 * 2)
-        tempAnimalArea = tempHeight * tempWidth
-        animalArea = animal.height * animal.width
-        diffAnimalArea = tempAnimalArea - animalArea
+        tempHeight = round(animal.height + (animal.height / 100 * 2), 3)
+        tempWidth = round(animal.width + (animal.width / 100 * 2), 3)
+        tempAnimalArea = round(tempHeight * tempWidth, 3)
+        animalArea = round(animal.height * animal.width, 3)
+        diffAnimalArea = round(tempAnimalArea - animalArea, 3)
 
         fence = animal.fence
 
@@ -92,17 +92,17 @@ class ZooKeeper:
             fence.area -= diffAnimalArea
             animal.height = tempHeight
             animal.width = tempWidth
-            animal.health += (animal.health / 100)
+            animal.health = round(animal.health + (animal.health / 100), 3)
 
     def clean(self, fence: Fence):
         totalAnimalArea = 0.0
         animals = fence.animals
         for animal in animals:
-            areaAnimal = animal.height * animal.width
+            areaAnimal = round(animal.height * animal.width, 3)
             totalAnimalArea += areaAnimal
         if fence.area == 0:
             return totalAnimalArea
-        areaRatio = totalAnimalArea / fence.area
+        areaRatio = round(totalAnimalArea / fence.area, 3)
         return areaRatio
 
     def __str__(self) -> str:
